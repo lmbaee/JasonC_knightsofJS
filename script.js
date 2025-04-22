@@ -24,16 +24,33 @@ function changePlayer() {
         if (playerTwoHealthNum <= 0) {
             // ensures health does not dig into the negative
             playerTwoHealth = 0;
+            playerTwoHealth.innerHTML = playerTwoHealthNum;
             // ends the game
             gameOver();
         }
         else {
             // switch to the next player and change the UI's display / behavior
+            playerTwoHealth.innerHTML = playerTwoHealthNum;
             gameState.whoseTurn = 2;
 
             // grabs the 'playerName' element and changes the player's turn display
-            let playerName = document.getElementById("playerName");
-            playerName.innerHTML = `Player ${gameState.whoseTurn}`;
+            document.getElementById("playerName").innerHTML = `Player 2`;
+        }
+        
+    }
+    // else, handle the case where it's player 2's turn
+    else if (gameState.whoseTurn === 2) {
+        let playerOneHealth = document.getElementById("playerOneHealth");
+        let playerOneHealthNum = Number(playerOneHealth.innerHTML);
+        playerOneHealthNum -= 10;
+        if (playerOneHealthNum <= 0) {
+            playerOneHealthNum = 0; // ensure health doesn't go below 0
+            playerOneHealth.innerHTML = playerOneHealthNum;
+            gameOver();
+        } else {
+            playerOneHealth.innerHTML = playerOneHealthNum;
+            gameState.whoseTurn = 1; // switch back to Player 1's turn
+            document.getElementById("playerName").innerHTML = `Player 1`;
         }
     }
 }
@@ -47,10 +64,14 @@ function gameOver() {
     playerTurnDisplay.style = "display: none;";
 
     let winningPlayer = document.getElementById("winningPlayer");
-    winningPlayer.innerHTML = `Player ${gameState.whoseTurn} wins!`
+    // show the OTHER player as the winner
+    let winner = gameState.whoseTurn === 1 ? 1 : 2;
+    winningPlayer.innerHTML = `Player ${winner} wins!`;
 
     let gameOverScreen = document.getElementById("gameOverScreen");
     gameOverScreen.style = "display: flex; flex-direction: column;";
+
+    gameState.gameOver = true; // lock the game state
 }
 
 // function that allows the player two attack button to reduce the player two's
@@ -131,17 +152,44 @@ function attackPlayerTwo() {
 }
 
 function attackPlayerOne() {
-    if (gameState.whoseTurn === 2) {
-        let playerOneHealth = document.getElementById("playerOneHealth");
-        let playerOneHealthNum = Number(playerOneHealth.innerHTML);
-        playerOneHealthNum -= 10;
-        playerOneHealth.innerHTML = playerOneHealthNum;
+    if (gameState.whoseTurn === 2 && !gameState.gameOver) {
+        // change player 2 attack visuals
+        let playerTwoFrames = [
+            "./images/L_Idle.png",
+            "./images/L_Attack.png"
+        ];
 
-        if (playerOneHealth <= 0) {
-            playerOneHealth = 0;
-            gameOver();
-        } else {
-            changePlayer();
+        let playerSprite = document.getElementById("playerTwoSprite");
+        playerSprite.src = playerTwoFrames[1];
+        playerSprite.classList.remove("idle");
+        playerSprite.classList.add("attack");
+
+        let enemySprite = document.getElementById("playerOneSprite");
+        let enemyDamage = document.getElementById("SFX_PlayerDamage");
+        enemySprite.classList.remove("idle");
+        enemySprite.classList.add("damage");
+        enemyDamage.play();
+
+        function changePlayerTwoSprite() {
+            enemySprite.classList.remove("damage");
+            enemySprite.classList.add("idle");
+            playerSprite.src = playerTwoFrames[0];
+            playerSprite.classList.remove("attack");
+            playerSprite.classList.add("idle");
         }
+        setTimeout(changePlayerTwoSprite, 350);
+
+        // update buttons visually
+        let playerOneAttackButton = document.getElementById("playerOneAttack");
+        playerOneAttackButton.disabled = true;
+        playerOneAttackButton.classList.add("inactive");
+        playerOneAttackButton.classList.remove("active");
+
+        let playerTwoAttackButton = document.getElementById("playerTwoAttack");
+        playerTwoAttackButton.disabled = false;
+        playerTwoAttackButton.classList.add("active");
+        playerTwoAttackButton.classList.remove("inactive");
+
+        changePlayer();
     }
 }

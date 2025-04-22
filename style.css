@@ -3,6 +3,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    /* ✨ Added a background image for immersion */
+    background-image: url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDI0LTAzL3Jhd3BpeGVsX29mZmljZV80NV9waG90b19vZl9ib3hpbmdfcmluZ19pc29tZXRyaWNfdmlld19ibGFja19hbl9jM2MzNDA0NC1kZmQyLTQxNmItYTZhZC1hZWFlN2NkYWY0MTlfMS5qcGc.jpg');
+    background-size: cover;
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    min-height: 100vh; 
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 #gameOverScreen {
@@ -48,7 +59,9 @@ body {
 .attack {
     height: 350px;
     width: 360px;
-    background: linear-gradient(-90deg, rgba(0,255,0, 0.7), rgba(255,0,0,0) 90.71%); border-top-right-radius: 80%; border-bottom-right-radius: 80%";
+    background: linear-gradient(-90deg, rgba(0,255,0, 0.7), rgba(255,0,0,0) 90.71%);
+    border-top-right-radius: 80%;
+    border-bottom-right-radius: 80%;
 }
 
 .damage {
